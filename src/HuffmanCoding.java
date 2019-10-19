@@ -1,14 +1,16 @@
 import java.util.*;
 
+// Class for a tree node
 class HuffmanNode {
 
-    HuffmanNode left;
-    HuffmanNode right;
+    HuffmanNode left; // Pointer to left child
+    HuffmanNode right; // Pointer to right child
     double weight; // Frequency
-    String label;
+    String label; // Name of symbol 
 }
 
-// Compare weights between two HuffmanNodes
+
+// Class with comparitor function to compare mannitudes of node frequencies
 class HuffmanNodeComparator implements Comparator<HuffmanNode> {
     public int compare(HuffmanNode x, HuffmanNode y)
     {
@@ -27,22 +29,40 @@ class HuffmanNodeComparator implements Comparator<HuffmanNode> {
 
 public class HuffmanCoding {
 
+
+	// Function to recursively construct the Huffman Tree
     private static HuffmanNode constructHuffmanTreeHelper(PriorityQueue<HuffmanNode> huffmanNodes){
+
+    	// If there is one node, simply return it
         if(huffmanNodes.size() == 1){
             return huffmanNodes.remove();
         }
+
+        // Pop off two nodes with smalles frequencies
         HuffmanNode smaller = huffmanNodes.remove();
         HuffmanNode larger = huffmanNodes.remove();
+
+        // Create a new node which has these two as children (larger weight on left side)
         HuffmanNode combined = new HuffmanNode();
         combined.left = larger;
         combined.right = smaller;
         combined.weight = larger.weight + smaller.weight;
+
+        // Add this new combined node back to the priority queue
         huffmanNodes.add(combined);
+
+        // Recursivly construct the tree!
         return constructHuffmanTreeHelper(huffmanNodes);
     }
 
-    private static HuffmanNode constructHuffmanTree(HashMap<String, Integer> histogram, int numAlphabet, int messageLen){
+    // Function to set up and kick off recursive creation of the Huffman Tree
+    public static HuffmanNode constructHuffmanTree(HashMap<String, Integer> histogram, int numAlphabet, int messageLen){
+
+    	// Instantiate priority queue to be filled with nodes
         PriorityQueue<HuffmanNode> huffmanNodes = new PriorityQueue<>(numAlphabet, new HuffmanNodeComparator());
+        
+        // For each element in message histogram, create node with label, and weight (frequency) and set
+        // children to null and add the node to the priority queue 
         for (HashMap.Entry mapElement : histogram.entrySet()){
             HuffmanNode node = new HuffmanNode();
             node.label = (String)mapElement.getKey();
@@ -51,11 +71,14 @@ public class HuffmanCoding {
             node.right = null;
             huffmanNodes.add(node);
         }
+
+        // Kick off recursive construction of tree
         return constructHuffmanTreeHelper(huffmanNodes);
     }
 
+    // Depth first search the tree keeping track of left/right child traversals and then store final label in a hash map
     private static void getEncodings(HashMap<String, String> encodings, HuffmanNode current, String encoding){
-        if (current.label != null && !encodings.containsKey(current.label)){
+        if (current.label != null){
             encodings.put(current.label, encoding);
             return;
         }
@@ -67,6 +90,7 @@ public class HuffmanCoding {
         }
     }
 
+    // Function to create hashmap where key is symbol and value is number if times appeared in the message
     private static HashMap<String, Integer> getHistogram(String message){
         HashMap<String, Integer> histogram = new HashMap<>();
         for(int i = 0; i < message.length(); i++){
@@ -82,14 +106,20 @@ public class HuffmanCoding {
     }
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-        String message = "mppa";
+    	// Message to encode
+        String message = "hello";
+
+        // Create and print message histogram to the terminal
         HashMap<String, Integer> histogram = getHistogram(message);
         System.out.println(histogram);
+        
+        // Construct the Huffman Tree and return the root node and print its weight to the terminal
         HuffmanNode root = constructHuffmanTree(histogram, histogram.size(), message.length());
         System.out.println(root.weight);
-        HashMap<String, String> encodedMessage = new HashMap<>();
-        getEncodings(encodedMessage, root, "");
-        System.out.println(encodedMessage);
+
+        // DFS the Huffman Tree and store the codes in a hashmap and print to the terminal
+        HashMap<String, String> symbolCodes = new HashMap<>();
+        getEncodings(symbolCodes, root, "");
+        System.out.println(symbolCodes);
     }
 }
