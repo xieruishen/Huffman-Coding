@@ -105,9 +105,20 @@ public class HuffmanCoding {
         return histogram;
     }
 
+    // Function to encode a message with Huffman code with a hashmap that has letter to encoding
+    private static String encodeMessage(String message, HashMap<String, String> encodingMap){
+        StringBuilder encodedMesage = new StringBuilder("");
+        for(int i = 0; i < message.length(); i++){
+            String letter = Character.toString(message.charAt(i));
+            encodedMesage.append(encodingMap.get(letter));
+        }
+        return  encodedMesage.toString();
+
+    }
+
     public static void main(String[] args) {
     	// Message to encode
-        String message = "hello";
+        String message = "mississippi";
 
         // Create and print message histogram to the terminal
         HashMap<String, Integer> histogram = getHistogram(message);
@@ -121,5 +132,8 @@ public class HuffmanCoding {
         HashMap<String, String> symbolCodes = new HashMap<>();
         getEncodings(symbolCodes, root, "");
         System.out.println(symbolCodes);
+
+        // Encode the message
+        System.out.println(encodeMessage(message, symbolCodes));
     }
 }
