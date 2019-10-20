@@ -9,7 +9,6 @@ class HuffmanNode {
     String label; // Name of symbol 
 }
 
-
 // Class with comparitor function to compare mannitudes of node frequencies
 class HuffmanNodeComparator implements Comparator<HuffmanNode> {
     public int compare(HuffmanNode x, HuffmanNode y)
@@ -28,7 +27,6 @@ class HuffmanNodeComparator implements Comparator<HuffmanNode> {
 
 
 public class HuffmanCoding {
-
 
 	// Function to recursively construct the Huffman Tree
     private static HuffmanNode constructHuffmanTreeHelper(PriorityQueue<HuffmanNode> huffmanNodes){
@@ -119,21 +117,22 @@ public class HuffmanCoding {
     public static void main(String[] args) {
     	// Message to encode
         String message = "mississippi";
+        System.out.println("Message: " + message);
 
         // Create and print message histogram to the terminal
         HashMap<String, Integer> histogram = getHistogram(message);
-        System.out.println(histogram);
+        System.out.println("Histogram: " + histogram);
         
         // Construct the Huffman Tree and return the root node and print its weight to the terminal
         HuffmanNode root = constructHuffmanTree(histogram, histogram.size(), message.length());
-        System.out.println(root.weight);
+        System.out.println("Root Node Weight: " + root.weight);
 
         // DFS the Huffman Tree and store the codes in a hashmap and print to the terminal
         HashMap<String, String> symbolCodes = new HashMap<>();
         getEncodings(symbolCodes, root, "");
-        System.out.println(symbolCodes);
+        System.out.println("Encoding for each letter: " + symbolCodes);
 
         // Encode the message
-        System.out.println(encodeMessage(message, symbolCodes));
+        System.out.println("Encoded Message: " + encodeMessage(message, symbolCodes));
     }
 }
